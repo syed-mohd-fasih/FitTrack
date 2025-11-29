@@ -1,4 +1,6 @@
-﻿<!-- 1. Navigation Menu (Sidebar) -->
+﻿@inject NavigationManager NavigationManager
+
+<!-- 1. Navigation Menu (Sidebar) -->
 <aside class="bg-gray-900 text-white w-full lg:w-64 p-4 lg:p-6 shadow-2xl z-10 lg:min-h-screen">
     <h1 class="text-3xl font-extrabold mb-8 text-cyan-400 tracking-widest">FITTRACK // PRO</h1>
     <nav class="flex flex-col space-y-3">
@@ -49,3 +51,23 @@
         </NavLink>
     </nav>
 </aside>
+
+@code {
+    private string? currentUrl;
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}
