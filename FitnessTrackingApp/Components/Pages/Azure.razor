@@ -1,0 +1,49 @@
+﻿@page "/azure"
+
+<div class="space-y-6">
+    <h1 class="text-3xl font-extrabold text-gray-800">Planned Azure Services Integration</h1>
+
+    <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 space-y-4">
+        <h2 class="text-xl font-bold text-teal-700">Deployment and Data Services</h2>
+        <p class="text-gray-700">
+            For production deployment, the FitTrack Pro application is designed to leverage core Azure services for hosting, data storage, and security.
+        </p>
+    </div>
+
+    <!-- Azure Services Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Azure App Service -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-l-4 border-blue-600 space-y-3">
+            <h3 class="text-xl font-bold text-blue-700">Azure App Service</h3>
+            <p class="text-sm text-gray-600">
+                **Purpose:** Hosting the Blazor Server application (backend and UI).
+            </p>
+            <p class="text-gray-700">
+                Provides scalable, fully managed Platform as a Service (PaaS) for hosting the .NET Web App, handling automatic scaling and deployment slots for updates.
+            </p>
+        </div>
+
+        <!-- Azure SQL Database -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-l-4 border-purple-600 space-y-3">
+            <h3 class="text-xl font-bold text-purple-700">Azure SQL Database</h3>
+            <p class="text-sm text-gray-600">
+                **Purpose:** Persistent storage for user profiles and fitness logs.
+            </p>
+            <p class="text-gray-700">
+                A highly secure and performant cloud database for storing structured fitness data (workouts, goals, measurements). Managed service reduces administrative overhead.
+            </p>
+        </div>
+
+        <!-- Azure Key Vault -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-l-4 border-yellow-600 space-y-3">
+            <h3 class="text-xl font-bold text-yellow-700">Azure Key Vault (Planned)</h3>
+            <p class="text-sm text-gray-600">
+                **Purpose:** Securely storing database connection strings and API keys.
+            </p>
+            <p class="text-gray-700">
+                Ensures that sensitive information is never checked into source control and is only accessible by the Azure App Service instance at runtime, improving security posture.
+            </p>
+        </div>
+    </div>
+</div>

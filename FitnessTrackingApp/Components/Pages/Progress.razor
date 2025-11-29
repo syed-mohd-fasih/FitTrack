@@ -1,0 +1,150 @@
+﻿@page "/progress"
+@inject IJSRuntime JSRuntime
+
+<div class="space-y-8 p-4">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-3 border-gray-200">
+        <!-- Title and Subtitle -->
+        <h1 class="text-4xl font-extrabold text-gray-800">
+            Progress & Deep Dive Analysis
+        </h1>
+        <p class="text-sm text-gray-500 mt-1 sm:mt-0">Visualize your achievements and trends.</p>
+    </div>
+
+    <!-- Filter/Date Range Section: Elevated Design -->
+    <div class="bg-white p-5 rounded-3xl shadow-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 border border-gray-100">
+
+        <!-- Activity Filter -->
+        <div class="flex items-center space-x-3 w-full md:w-auto">
+            <label for="activity-filter" class="text-sm font-medium text-gray-700 whitespace-nowrap">Activity:</label>
+            <select id="activity-filter" class="w-full md:w-40 p-3 border border-gray-300 rounded-xl focus:ring-cyan-500 focus:border-cyan-500 transition duration-150 ease-in-out text-sm shadow-sm">
+                <option>All Workouts</option>
+                <option>Running (Distance)</option>
+                <option>Lifting (Weight)</option>
+                <option>Steps (Count)</option>
+            </select>
+        </div>
+
+        <!-- Date Range Filter -->
+        <div class="flex items-center space-x-3 w-full md:w-auto">
+            <label for="date-range" class="text-sm font-medium text-gray-700 whitespace-nowrap">Range:</label>
+            <select id="date-range" class="w-full md:w-40 p-3 border border-gray-300 rounded-xl focus:ring-lime-500 focus:border-lime-500 transition duration-150 ease-in-out text-sm shadow-sm">
+                <option>Last 30 Days</option>
+                <option>Last 7 Days</option>
+                <option>This Month</option>
+                <option>Yearly</option>
+            </select>
+        </div>
+
+        <!-- Action Button: Uses Primary Cyan Accent -->
+        <button class="w-full md:w-auto px-6 py-3 bg-cyan-600 text-white font-semibold rounded-xl shadow-lg hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition duration-150 ease-in-out text-sm">
+            Apply Filters
+        </button>
+    </div>
+
+    <!-- Main Chart Area -->
+    <div class="bg-white p-6 rounded-3xl shadow-2xl border border-cyan-100/50">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Trend: Running Performance (Last 5 Weeks)</h2>
+        <div class="h-80 w-full">
+            <canvas id="progressChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Key Metrics Cards: Distinct Colors and Borders -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Metric 1: Peak Performance - Cyan Accent -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border-l-8 border-cyan-500 hover:shadow-2xl transition duration-300">
+            <p class="text-sm font-medium text-gray-500">Peak Distance</p>
+            <p class="text-4xl font-extrabold text-cyan-700 mt-1">12.5 <span class="text-lg font-semibold text-gray-600">km</span></p>
+            <p class="text-xs text-gray-400 mt-1">Your longest recorded run.</p>
+        </div>
+
+        <!-- Metric 2: Average - Lime Green Accent -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border-l-8 border-lime-500 hover:shadow-2xl transition duration-300">
+            <p class="text-sm font-medium text-gray-500">Weekly Average</p>
+            <p class="text-4xl font-extrabold text-lime-700 mt-1">4.2 <span class="text-lg font-semibold text-gray-600">workouts</span></p>
+            <p class="text-xs text-gray-400 mt-1">Consistent activity level maintained.</p>
+        </div>
+
+        <!-- Metric 3: Total Volume - Consistent Neutral (Gray/Red for Alerts) -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border-l-8 border-gray-300 hover:shadow-2xl transition duration-300">
+            <p class="text-sm font-medium text-gray-500">Total Calories (All Time)</p>
+            <p class="text-4xl font-extrabold text-gray-700 mt-1">15,890 <span class="text-lg font-semibold text-gray-600">kcal</span></p>
+            <p class="text-xs text-gray-400 mt-1">A significant lifetime achievement!</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool firstRender = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("renderProgressChart");
+        }
+    }
+}
+
+<!-- JavaScript for Chart.js Dummy Data: Updated to Cyan Theme -->
+<script>
+    window.renderProgressChart = () => {
+        const ctx = document.getElementById('progressChart');
+        // Define the new primary color (Neon Blue/Cyan)
+        const primaryColor = 'rgba(6, 182, 212, 1)'; // Tailwind cyan-600
+
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                    datasets: [{
+                        label: 'Distance (km)',
+                        data: [15, 18, 16, 22, 25], // Dummy data
+                        backgroundColor: 'rgba(6, 182, 212, 0.4)', // Cyan with transparency
+                        borderColor: primaryColor,
+                        borderWidth: 4,
+                        pointBackgroundColor: primaryColor,
+                        pointBorderColor: '#fff',
+                        pointHoverRadius: 6,
+                        tension: 0.4, // Smooth curve
+                        fill: 'start', // Fill area under the line
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Kilometers'
+                            },
+                            grid: {
+                                color: 'rgba(200, 200, 200, 0.2)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 10,
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 14 }
+                        }
+                    }
+                }
+            });
+        }
+    };
+</script>

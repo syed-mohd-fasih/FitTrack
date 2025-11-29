@@ -1,0 +1,96 @@
+﻿@page "/"
+
+<div class="space-y-8 p-4">
+    <!-- Header with Welcoming Callout: NEW NEON BLUE GRADIENT -->
+    <div class="bg-gradient-to-r from-cyan-500 to-sky-600 text-white p-6 md:p-8 rounded-3xl shadow-xl">
+        <h1 class="text-4xl font-black mb-1">Welcome Back, Fitness Fanatic!</h1>
+        <p class="text-lg font-light opacity-90">Your motivation is key. Let's crush those goals today.</p>
+        <div class="mt-4 flex space-x-4">
+            <span class="bg-white text-cyan-700 text-sm font-bold px-3 py-1 rounded-full shadow-md">Streak: 7 Days ⚡</span>
+            <span class="bg-white text-sky-700 text-sm font-bold px-3 py-1 rounded-full shadow-md">Goal: 10,000 Steps</span>
+        </div>
+    </div>
+
+    <!-- MAIN METRICS OVERVIEW: Dynamic Card Styling -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Card 1: STEPS - Neon Blue Primary -->
+        <div class="bg-white p-6 rounded-3xl shadow-2xl border border-gray-100 transition duration-300 transform hover:scale-[1.02] hover:shadow-cyan-300/50 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-semibold text-gray-500">Steps Today</p>
+                <span class="text-cyan-500 text-2xl">👟</span>
+            </div>
+
+            <!-- Value and Goal -->
+            <p class="text-5xl font-extrabold text-gray-900">850</p>
+            <div class="mt-4">
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="bg-cyan-500 h-2.5 rounded-full" style="width: 85%"></div>
+                </div>
+                <p class="text-xs text-cyan-600 mt-1 font-medium">85% Complete</p>
+            </div>
+        </div>
+
+        <!-- Card 2: CALORIES - Vibrant Lime Green Gradient -->
+        <div class="p-6 rounded-3xl shadow-2xl transition duration-300 transform hover:scale-[1.02] cursor-pointer bg-gradient-to-br from-lime-500 to-green-600 text-gray-900 hover:from-lime-600 hover:to-green-700">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-semibold opacity-90">Calories Burned</p>
+                <span class="text-white text-2xl">🔥</span>
+            </div>
+            <p class="text-5xl font-extrabold mt-1">540 <span class="text-xl font-medium ml-1 opacity-80">kcal</span></p>
+            <p class="text-sm mt-4 opacity-90">High intensity zone average.</p>
+        </div>
+
+        <!-- Card 3: ACTIVE MINUTES - Neon Blue Breakdown -->
+        <div class="bg-white p-6 rounded-3xl shadow-2xl border border-gray-100 transition duration-300 transform hover:scale-[1.02] hover:shadow-sky-300/50 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-semibold text-gray-500">Active Minutes</p>
+                <span class="text-sky-500 text-2xl">⏳</span>
+            </div>
+
+            <p class="text-5xl font-extrabold text-gray-900">90</p>
+            <p class="text-sm text-gray-600 mt-2">Breakdown:</p>
+            <div class="h-2 flex rounded-full mt-1 overflow-hidden">
+                <div class="bg-cyan-500 h-full" style="width: 50%;"></div>
+                <div class="bg-sky-500 h-full" style="width: 50%;"></div>
+            </div>
+            <div class="text-xs text-gray-500 flex justify-between mt-1">
+                <span>Moderate (45m)</span>
+                <span>Vigorous (45m)</span>
+            </div>
+        </div>
+
+        <!-- Card 4: SLEEP - Neon Blue Focus -->
+        <div class="bg-white p-6 rounded-3xl shadow-2xl border border-gray-100 transition duration-300 transform hover:scale-[1.02] hover:shadow-indigo-300/50 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-semibold text-gray-500">Sleep Score</p>
+                <span class="text-indigo-500 text-2xl">💤</span>
+            </div>
+            <p class="text-5xl font-extrabold text-gray-900">82</p>
+            <p class="text-sm text-indigo-600 mt-4 font-medium">7h 45m deep sleep recorded.</p>
+        </div>
+    </div>
+
+    <!-- Quick Action Section with Custom Icon: Accent with Cyan -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Log Button -->
+        <div class="lg:col-span-2 bg-cyan-50 p-6 rounded-3xl shadow-lg border border-cyan-100 flex flex-col justify-between items-start">
+            <h2 class="text-2xl font-bold text-cyan-800 flex items-center">
+                <svg class="w-7 h-7 mr-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Record Activity
+            </h2>
+            <p class="text-cyan-700 mt-2 mb-4">Quickly log your latest run, gym session, or yoga class to keep your progress accurate.</p>
+            <button class="w-auto px-6 py-3 bg-cyan-600 text-white font-extrabold rounded-full shadow-lg hover:bg-cyan-700 transition duration-150 transform hover:scale-[1.03]">
+                Log Workout Now
+            </button>
+        </div>
+
+        <!-- Secondary Metric/Tip: Accent with Lime Green -->
+        <div class="bg-white p-6 rounded-3xl shadow-lg border border-gray-100 flex flex-col justify-center">
+            <p class="text-sm font-bold text-lime-600 mb-2">Weekly Insight</p>
+            <p class="text-xl font-extrabold text-gray-900">Consistency is Up 12%</p>
+            <p class="text-sm text-gray-500 mt-1">Great job maintaining your streak!</p>
+        </div>
+    </div>
+</div>

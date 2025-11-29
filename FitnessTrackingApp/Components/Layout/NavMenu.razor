@@ -1,0 +1,51 @@
+﻿<!-- 1. Navigation Menu (Sidebar) -->
+<aside class="bg-gray-900 text-white w-full lg:w-64 p-4 lg:p-6 shadow-2xl z-10 lg:min-h-screen">
+    <h1 class="text-3xl font-extrabold mb-8 text-cyan-400 tracking-widest">FITTRACK // PRO</h1>
+    <nav class="flex flex-col space-y-3">
+
+        <!-- Dashboard Link (Maps to Pages/Home.razor) -->
+        <NavLink class="nav-item flex items-center p-3 rounded-xl hover:bg-cyan-600 transition duration-150" href="/" Match="NavLinkMatch.All">
+            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+            <span class="font-medium">Dashboard</span>
+        </NavLink>
+
+        <!-- PROGRESS & CHARTS LINK (Unique Feature) -->
+        <NavLink class="nav-item flex items-center p-3 rounded-xl hover:bg-cyan-600 transition duration-150" href="progress">
+            <svg class="w-6 h-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9A9.001 9.001 0 0013 3.512V9h7.488z" />
+            </svg>
+            <span class="font-medium">Progress & Charts</span>
+        </NavLink>
+
+        <!-- MEAL PLANNING LINK (Unique Feature) -->
+        <NavLink class="nav-item flex items-center p-3 rounded-xl hover:bg-cyan-600 transition duration-150" href="mealplan">
+            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="font-medium">Meal Planning</span>
+        </NavLink>
+
+        <!-- Academic Pages Separator -->
+        <div class="h-px bg-gray-700 my-2"></div>
+        <p class="text-xs font-semibold uppercase text-gray-400 pl-3 pt-2 pb-1">Project Documents</p>
+
+        <!-- Project Introduction Link -->
+        <NavLink class="nav-item flex items-center p-3 rounded-xl hover:bg-cyan-600 transition duration-150" href="intro">
+            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <span class="font-medium">Project Introduction</span>
+        </NavLink>
+
+        <!-- Architecture Link -->
+        <NavLink class="nav-item flex items-center p-3 rounded-xl hover:bg-cyan-600 transition duration-150" href="architecture">
+            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span class="font-medium">Architecture</span>
+        </NavLink>
+
+        <!-- Azure Services Link -->
+        <NavLink class="nav-item flex items-center p-3 rounded-xl hover:bg-cyan-600 transition duration-150" href="azure">
+            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1h-.75M13.5 10l-1 1-1-1M12 4v10M4 7h16"></path></svg>
+            <span class="font-medium">Azure Services</span>
+        </NavLink>
+    </nav>
+</aside>
