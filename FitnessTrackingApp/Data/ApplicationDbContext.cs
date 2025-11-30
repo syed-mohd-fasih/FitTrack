@@ -11,4 +11,5 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
     public DbSet<Workout> Workouts { get; set; }
+    public DbSet<Meal> Meals { get; set; }
 }

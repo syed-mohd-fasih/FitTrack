@@ -1,61 +1,216 @@
 ﻿@page "/mealplan"
+@using FitnessTrackingApp.Models
+@using FitnessTrackingApp.DTOs
+@using FitnessTrackingApp.Interfaces
+@inject IMealService MealService
+@inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthStateProvider
 
-<div class="space-y-6 p-4">
-    <div class="flex justify-between items-center border-b pb-3 border-gray-200">
-        <h1 class="text-4xl font-extrabold text-gray-800">Weekly Meal Planner</h1>
-        <button class="px-6 py-3 bg-cyan-600 text-white font-semibold rounded-xl shadow-lg hover:bg-cyan-700 transition duration-150 ease-in-out">
-            Generate Plan
-        </button>
-    </div>
+@rendermode InteractiveServer
 
-    <!-- Day Navigation/Selector: Uses Cyan Accent -->
-    <div class="flex space-x-2 overflow-x-auto pb-2 border-b border-gray-200">
-        <button class="px-4 py-2 text-sm font-semibold rounded-full bg-cyan-500 text-white shadow-lg">Today (Mon)</button>
-        <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300">Tue</button>
-        <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300">Wed</button>
-        <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300">Thu</button>
-        <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300">Fri</button>
-        <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300">Sat</button>
-        <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300">Sun</button>
-    </div>
+<h1 class="text-4xl font-extrabold mb-6 text-black">Weekly Meal Planner</h1>
 
-    <!-- Meal Cards -->
-    <div class="space-y-6">
-
-        <!-- Meal Card 1: Breakfast - Lime Green (Complete/Success) -->
-        <div class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between border-l-8 border-lime-500">
-            <div class="flex-1 space-y-1">
-                <h2 class="text-2xl font-bold text-gray-800">Breakfast</h2>
-                <p class="text-lg text-gray-600">Oatmeal with Berries and Almonds</p>
-                <p class="text-sm text-gray-500">350 kcal | 15g Protein</p>
-            </div>
-            <button class="bg-lime-100 text-lime-700 p-3 rounded-full hover:bg-lime-200 transition duration-150">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            </button>
-        </div>
-
-        <!-- Meal Card 2: Lunch - Cyan Accent (Primary focus) -->
-        <div class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between border-l-8 border-cyan-500">
-            <div class="flex-1 space-y-1">
-                <h2 class="text-2xl font-bold text-gray-800">Lunch</h2>
-                <p class="text-lg text-gray-600">Grilled Chicken Salad with Vinaigrette</p>
-                <p class="text-sm text-gray-500">480 kcal | 40g Protein</p>
-            </div>
-            <button class="bg-gray-200 text-gray-600 p-3 rounded-full hover:bg-gray-300 transition duration-150">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            </button>
-        </div>
-
-        <!-- Meal Card 3: Dinner - Neutral Border (Less prominent) -->
-        <div class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between border-l-8 border-gray-300 opacity-90">
-            <div class="flex-1 space-y-1">
-                <h2 class="text-2xl font-bold text-gray-800">Dinner</h2>
-                <p class="text-lg text-gray-600">Salmon with Asparagus and Brown Rice</p>
-                <p class="text-sm text-gray-500">600 kcal | 45g Protein</p>
-            </div>
-            <button class="bg-gray-200 text-gray-600 p-3 rounded-full hover:bg-gray-300 transition duration-150">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            </button>
-        </div>
-    </div>
+<div class="flex space-x-2 overflow-x-auto pb-2 border-b border-gray-700 mb-6">
+    @foreach (var day in DaysOfWeek)
+    {
+        <button class="@GetDayButtonClasses(day)" @onclick="() => SelectDay(day)">@day: @DayToDate[day].ToString("dd MMM")</button>
+    }
 </div>
+
+<button class="px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg hover:bg-green-700 transition duration-150 ease-in-out"
+        @onclick="OpenAddModal">
+    + Add Meal
+</button>
+
+<div class="space-y-6">
+    @foreach (var meal in MealsForSelectedDay)
+    {
+        <div class="p-6 rounded-3xl shadow-xl flex items-center justify-between border-l-8 @GetMealBorder(meal)">
+            <div class="flex-1 space-y-1">
+                <h2 class="text-2xl font-bold">@meal.Name</h2>
+                <p class="text-lg">@meal.Description</p>
+                <p class="text-sm text-gray-400">@meal.Calories kcal | @meal.ProteinGrams g Protein</p>
+            </div>
+            <div class="flex space-x-2">
+                <button class="@GetConsumedButtonClass(meal)" @onclick="() => ToggleConsumed(meal)">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </button>
+                <button class="px-4 bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-full" @onclick="() => OpenEditModal(meal)">
+                    ✎
+                </button>
+                <button class="px-4 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full" @onclick="() => OpenDeleteModal(meal)">
+                    🗑
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Add/Edit Modal -->
+@if (IsModalOpen)
+{
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-gray-900 text-gray-100 rounded-lg p-6 w-96">
+            <h2 class="text-xl font-bold mb-4">@ModalTitle</h2>
+            <div class="space-y-3">
+                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" placeholder="Meal Name" @bind="CurrentMeal.Name" />
+                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" placeholder="Description" @bind="CurrentMeal.Description" />
+                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" placeholder="Calories" type="number" @bind="CurrentMeal.Calories" />
+                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" placeholder="Protein (g)" type="number" @bind="CurrentMeal.ProteinGrams" />
+                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" type="date" @bind="CurrentMeal.Date" />
+            </div>
+            <div class="mt-4 flex justify-end space-x-2">
+                <button class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded" @onclick="CloseModal">Cancel</button>
+                <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded" @onclick="SaveMeal">Save</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Delete Modal -->
+@if (IsDeleteModalOpen)
+{
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-gray-900 text-gray-100 rounded-lg p-6 w-80">
+            <h2 class="text-xl font-bold mb-4">Confirm Delete</h2>
+            <p>Delete <strong>@MealToDelete?.Name</strong>?</p>
+            <div class="mt-4 flex justify-end space-x-2">
+                <button class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded" @onclick="CloseDeleteModal">Cancel</button>
+                <button class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded" @onclick="ConfirmDeleteMeal">Delete</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Meal> MealsForSelectedDay = new();
+    private string UserId = string.Empty;
+    private string SelectedDay = "Mon";
+    private Dictionary<string, DateTime> DayToDate = new();
+    private string[] DaysOfWeek = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+
+    private bool IsModalOpen = false;
+    private bool IsDeleteModalOpen = false;
+    private string ModalTitle = "Add Meal";
+    private MealDto CurrentMeal = new();
+    private Meal? EditingMeal = null;
+    private Meal? MealToDelete = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            UserId = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value ?? "";
+        }
+
+        // Map days to current week
+        var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1);
+        foreach (var day in DaysOfWeek.Select((d, i) => new { d, i }))
+        {
+            DayToDate[day.d] = startOfWeek.AddDays(day.i);
+        }
+
+        await LoadMeals();
+        SelectDay("Mon");
+    }
+
+    private async Task LoadMeals()
+    {
+        MealsForSelectedDay = await MealService.GetUserMealsByDateAsync(UserId, DayToDate[SelectedDay]);
+    }
+
+    private void SelectDay(string day)
+    {
+        SelectedDay = day;
+        _ = LoadMeals();
+    }
+
+    private string GetDayButtonClasses(string day) =>
+        day == SelectedDay
+            ? "px-4 py-2 text-sm font-semibold rounded-full bg-cyan-500 text-white shadow-lg"
+            : "px-4 py-2 text-sm font-medium rounded-full bg-gray-700 text-gray-100 hover:bg-gray-600";
+
+    private string GetMealBorder(Meal meal) =>
+        meal.Name switch
+        {
+            "Breakfast" => "border-lime-500",
+            "Lunch" => "border-cyan-500",
+            "Dinner" => "border-gray-400",
+            _ => "border-gray-300"
+        };
+
+    private string GetConsumedButtonClass(Meal meal) =>
+        meal.Consumed
+            ? "bg-lime-100 text-lime-700 p-3 rounded-full hover:bg-lime-200"
+            : "bg-gray-700 text-gray-100 p-3 rounded-full hover:bg-gray-600";
+
+    private void OpenAddModal()
+    {
+        ModalTitle = "Add Meal";
+        CurrentMeal = new MealDto { Date = DayToDate[SelectedDay] };
+        EditingMeal = null;
+        IsModalOpen = true;
+    }
+
+    private void OpenEditModal(Meal meal)
+    {
+        ModalTitle = "Edit Meal";
+        EditingMeal = meal;
+        CurrentMeal = new MealDto
+        {
+            Name = meal.Name,
+            Description = meal.Description,
+            Calories = meal.Calories,
+            ProteinGrams = meal.ProteinGrams,
+            Date = meal.Date,
+            Consumed = meal.Consumed
+        };
+        IsModalOpen = true;
+    }
+
+    private void CloseModal() => IsModalOpen = false;
+
+    private async Task SaveMeal()
+    {
+        if (EditingMeal != null)
+        {
+            await MealService.UpdateMealAsync(EditingMeal.Id, UserId, CurrentMeal);
+        }
+        else
+        {
+            await MealService.CreateMealAsync(UserId, CurrentMeal);
+        }
+        IsModalOpen = false;
+        EditingMeal = null;
+        await LoadMeals();
+    }
+
+    private void OpenDeleteModal(Meal meal)
+    {
+        MealToDelete = meal;
+        IsDeleteModalOpen = true;
+    }
+
+    private void CloseDeleteModal()
+    {
+        IsDeleteModalOpen = false;
+        MealToDelete = null;
+    }
+
+    private async Task ConfirmDeleteMeal()
+    {
+        if (MealToDelete != null)
+        {
+            await MealService.DeleteMealAsync(MealToDelete.Id, UserId);
+            IsDeleteModalOpen = false;
+            await LoadMeals();
+        }
+    }
+
+    private async Task ToggleConsumed(Meal meal)
+    {
+        await MealService.ToggleConsumedAsync(meal.Id, UserId);
+        await LoadMeals();
+    }
+}

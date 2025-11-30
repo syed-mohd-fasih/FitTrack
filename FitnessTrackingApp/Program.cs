@@ -16,7 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Identity
+// Identity Services
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -39,8 +39,11 @@ builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.Require
 
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
 
-// Workout
+// Workout Service
 builder.Services.AddScoped<IWorkoutService, WorkoutService>();
+
+// Meals Service
+builder.Services.AddScoped<IMealService, MealService>();
 
 var app = builder.Build();
 
