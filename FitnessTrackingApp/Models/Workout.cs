@@ -4,27 +4,30 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FitnessTrackingApp.Models;
 
+// Workout entity representing a user's exercise session
 public class Workout
 {
-    [Key]
+    [Key] // Primary key
     public int Id { get; set; }
 
-    [Required]
+    [Required] // Name of the exercise (e.g., Bench Press)
     public string ExerciseName { get; set; } = string.Empty;
 
-    [Required]
+    [Required] // Number of sets performed
     public int Sets { get; set; }
 
-    [Required]
+    [Required] // Number of repetitions per set
     public int Reps { get; set; }
+
+    // Weight used for the exercise in kilograms
     public double WeightKg { get; set; }
 
-    [Required]
+    [Required] // Date of the workout session
     public DateTime Date { get; set; } = DateTime.UtcNow;
 
-    [Required]
+    [Required] // Associated user's ID
     public string UserId { get; set; } = string.Empty;
 
-    [ForeignKey(nameof(UserId))]
+    [ForeignKey(nameof(UserId))] // Link to the IdentityUser entity
     public IdentityUser? User { get; set; }
 }

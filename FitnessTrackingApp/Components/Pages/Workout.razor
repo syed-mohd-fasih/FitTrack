@@ -4,12 +4,12 @@
 @using FitnessTrackingApp.DTOs
 @using FitnessTrackingApp.Interfaces
 
-@inject IWorkoutService WorkoutService
-@inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthStateProvider
+@inject IWorkoutService WorkoutService   <!-- Inject workout service -->
+@inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthStateProvider   <!-- Inject auth provider -->
 
-@rendermode InteractiveServer
+@rendermode InteractiveServer   <!-- Enable interactive Blazor rendering -->
 
-
+<!-- Page Title -->
 <h1 class="text-3xl font-bold mb-6 text-gray-100">My Workouts</h1>
 
 <!-- Add Workout Button -->
@@ -27,11 +27,11 @@
             <th class="px-4 py-2">Sets</th>
             <th class="px-4 py-2">Reps</th>
             <th class="px-4 py-2">Weight (kg)</th>
-            <th class="px-4 py-2">Actions</th>
+            <th class="px-4 py-2">Actions</th> <!-- Edit/Delete column -->
         </tr>
     </thead>
     <tbody class="divide-y divide-gray-700">
-        @foreach (var workout in Workouts)
+        @foreach (var workout in Workouts)   <!-- Loop through all workouts -->
         {
             <tr>
                 <td class="px-4 py-2">@workout.Date.ToShortDateString()</td>
@@ -40,10 +40,12 @@
                 <td class="px-4 py-2">@workout.Reps</td>
                 <td class="px-4 py-2">@workout.WeightKg</td>
                 <td class="px-4 py-2 space-x-2">
+                    <!-- Edit button -->
                     <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded"
                             @onclick="() => OpenEditModal(workout)">
                         Edit
                     </button>
+                    <!-- Delete button -->
                     <button class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
                             @onclick="() => OpenDeleteModal(workout)">
                         Delete
@@ -57,16 +59,20 @@
 <!-- Add/Edit Workout Modal -->
 @if (IsModalOpen)
 {
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-96">
-            <h2 class="text-xl font-bold mb-4">@ModalTitle</h2>
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"> <!-- Overlay Background -->
+        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-96"> <!-- Modal Box -->
+            <h2 class="text-xl font-bold mb-4">@ModalTitle</h2> <!-- Dynamic Title -->
+
+            <!-- Input Fields -->
             <div class="space-y-3">
                 <input class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Exercise Name" @bind="CurrentWorkout.ExerciseName" />
                 <input class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Sets" type="number" @bind="CurrentWorkout.Sets" />
                 <input class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Reps" type="number" @bind="CurrentWorkout.Reps" />
                 <input class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Weight (kg)" type="number" step="0.1" @bind="CurrentWorkout.WeightKg" />
-                <input class="w-full p-2 rounded bg-gray-700 text-gray-100" type="date" @bind="CurrentWorkout.Date" />
+                <input class="w-full p-2 rounded bg-gray-700 text-gray-100" type="date" @bind="CurrentWorkout.Date" /> <!-- Date Selector -->
             </div>
+
+            <!-- Modal Action Buttons -->
             <div class="mt-4 flex justify-end space-x-2">
                 <button class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded" @onclick="CloseModal">Cancel</button>
                 <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded" @onclick="SaveWorkout">Save</button>
@@ -78,10 +84,11 @@
 <!-- Delete Confirmation Modal -->
 @if (IsDeleteModalOpen)
 {
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-80">
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"> <!-- Overlay -->
+        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-80"> <!-- Modal Box -->
             <h2 class="text-xl font-bold mb-4">Confirm Delete</h2>
             <p>Are you sure you want to delete <strong>@WorkoutToDelete?.ExerciseName</strong>?</p>
+
             <div class="mt-4 flex justify-end space-x-2">
                 <button class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded" @onclick="CloseDeleteModal">Cancel</button>
                 <button class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded" @onclick="ConfirmDeleteWorkout">Delete</button>
@@ -91,44 +98,47 @@
 }
 
 @code {
-    private List<FitnessTrackingApp.Models.Workout> Workouts = new();
-    private string UserId = string.Empty;
+    private List<FitnessTrackingApp.Models.Workout> Workouts = new();   // All user workouts
+    private string UserId = string.Empty;   // Logged-in user ID
 
-    private bool IsModalOpen = false;
-    private bool IsDeleteModalOpen = false;
-    private string ModalTitle = "Add Workout";
-    private CreateWorkoutDto CurrentWorkout = new();
-    private FitnessTrackingApp.Models.Workout? EditingWorkout = null;
-    private FitnessTrackingApp.Models.Workout? WorkoutToDelete = null;
+    private bool IsModalOpen = false;       // Add/Edit modal toggle
+    private bool IsDeleteModalOpen = false; // Delete modal toggle
+    private string ModalTitle = "Add Workout"; // Title for modal
+    private CreateWorkoutDto CurrentWorkout = new(); // Form binding model
+    private FitnessTrackingApp.Models.Workout? EditingWorkout = null; // Tracks which workout is being edited
+    private FitnessTrackingApp.Models.Workout? WorkoutToDelete = null; // Tracks workout selected for deletion
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync(); // Get authentication state
         var user = authState.User;
-        if (user.Identity?.IsAuthenticated == true)
+
+        if (user.Identity?.IsAuthenticated == true) // Check if logged in
         {
-            UserId = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value ?? "";
-            await LoadWorkouts();
+            UserId = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value ?? ""; // Extract user ID
+            await LoadWorkouts(); // Load user's workouts
         }
     }
 
     private async Task LoadWorkouts()
     {
-        Workouts = await WorkoutService.GetUserWorkoutsAsync(UserId);
+        Workouts = await WorkoutService.GetUserWorkoutsAsync(UserId); // Fetch workouts from service
     }
 
     private void OpenAddModal()
     {
-        ModalTitle = "Add Workout";
-        CurrentWorkout = new CreateWorkoutDto { Date = DateTime.Today };
-        EditingWorkout = null;
-        IsModalOpen = true;
+        ModalTitle = "Add Workout"; // Set modal title
+        CurrentWorkout = new CreateWorkoutDto { Date = DateTime.Today }; // Reset form fields
+        EditingWorkout = null; // No workout is being edited
+        IsModalOpen = true; // Show modal
     }
 
     private void OpenEditModal(FitnessTrackingApp.Models.Workout workout)
     {
-        ModalTitle = "Edit Workout";
-        EditingWorkout = workout;
+        ModalTitle = "Edit Workout"; // Update title
+        EditingWorkout = workout; // Store workout being edited
+
+        // Pre-fill form fields with existing workout data
         CurrentWorkout = new CreateWorkoutDto
         {
             ExerciseName = workout.ExerciseName,
@@ -137,17 +147,18 @@
             WeightKg = workout.WeightKg,
             Date = workout.Date
         };
-        IsModalOpen = true;
+
+        IsModalOpen = true; // Open modal
     }
 
     private void CloseModal()
     {
-        IsModalOpen = false;
+        IsModalOpen = false; // Close modal
     }
 
     private async Task SaveWorkout()
     {
-        if (EditingWorkout != null)
+        if (EditingWorkout != null) // If editing existing workout
         {
             await WorkoutService.UpdateWorkoutAsync(EditingWorkout.Id, UserId, new UpdateWorkoutDto
             {
@@ -158,34 +169,34 @@
                 Date = CurrentWorkout.Date
             });
         }
-        else
+        else // Creating new workout
         {
             await WorkoutService.CreateWorkoutAsync(UserId, CurrentWorkout);
         }
 
-        IsModalOpen = false;
-        await LoadWorkouts();
+        IsModalOpen = false; // Close modal after save
+        await LoadWorkouts(); // Refresh list
     }
 
     private void OpenDeleteModal(FitnessTrackingApp.Models.Workout workout)
     {
-        WorkoutToDelete = workout;
-        IsDeleteModalOpen = true;
+        WorkoutToDelete = workout; // Store selected workout
+        IsDeleteModalOpen = true; // Show delete modal
     }
 
     private void CloseDeleteModal()
     {
-        IsDeleteModalOpen = false;
-        WorkoutToDelete = null;
+        IsDeleteModalOpen = false; // Close delete modal
+        WorkoutToDelete = null; // Clear selection
     }
 
     private async Task ConfirmDeleteWorkout()
     {
         if (WorkoutToDelete != null)
         {
-            await WorkoutService.DeleteWorkoutAsync(WorkoutToDelete.Id, UserId);
-            IsDeleteModalOpen = false;
-            await LoadWorkouts();
+            await WorkoutService.DeleteWorkoutAsync(WorkoutToDelete.Id, UserId); // Call delete service
+            IsDeleteModalOpen = false; // Close modal
+            await LoadWorkouts(); // Refresh table
         }
     }
 }

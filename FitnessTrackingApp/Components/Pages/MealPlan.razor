@@ -1,6 +1,8 @@
 ﻿@page "/mealplan"
 
+<!-- Main container for spacing and padding -->
 <div class="space-y-6 p-4">
+    <!-- Header with title and action button -->
     <div class="flex justify-between items-center border-b pb-3 border-gray-200">
         <h1 class="text-4xl font-extrabold text-gray-800">Weekly Meal Planner</h1>
         <button class="px-6 py-3 bg-cyan-600 text-white font-semibold rounded-xl shadow-lg hover:bg-cyan-700 transition duration-150 ease-in-out">
@@ -8,7 +10,7 @@
         </button>
     </div>
 
-    <!-- Day Navigation/Selector: Uses Cyan Accent -->
+    <!-- Day Navigation Bar -->
     <div class="flex space-x-2 overflow-x-auto pb-2 border-b border-gray-200">
         <button class="px-4 py-2 text-sm font-semibold rounded-full bg-cyan-500 text-white shadow-lg">Today (Mon)</button>
         <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300">Tue</button>
@@ -19,40 +21,43 @@
         <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300">Sun</button>
     </div>
 
-    <!-- Meal Cards -->
+    <!-- Meal cards container -->
     <div class="space-y-6">
 
-        <!-- Meal Card 1: Breakfast - Lime Green (Complete/Success) -->
+        <!-- Breakfast card -->
         <div class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between border-l-8 border-lime-500">
             <div class="flex-1 space-y-1">
                 <h2 class="text-2xl font-bold text-gray-800">Breakfast</h2>
                 <p class="text-lg text-gray-600">Oatmeal with Berries and Almonds</p>
                 <p class="text-sm text-gray-500">350 kcal | 15g Protein</p>
             </div>
+            <!-- Completed check icon -->
             <button class="bg-lime-100 text-lime-700 p-3 rounded-full hover:bg-lime-200 transition duration-150">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             </button>
         </div>
 
-        <!-- Meal Card 2: Lunch - Cyan Accent (Primary focus) -->
+        <!-- Lunch card -->
         <div class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between border-l-8 border-cyan-500">
             <div class="flex-1 space-y-1">
                 <h2 class="text-2xl font-bold text-gray-800">Lunch</h2>
                 <p class="text-lg text-gray-600">Grilled Chicken Salad with Vinaigrette</p>
                 <p class="text-sm text-gray-500">480 kcal | 40g Protein</p>
             </div>
+            <!-- Add button -->
             <button class="bg-gray-200 text-gray-600 p-3 rounded-full hover:bg-gray-300 transition duration-150">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             </button>
         </div>
 
-        <!-- Meal Card 3: Dinner - Neutral Border (Less prominent) -->
+        <!-- Dinner card -->
         <div class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between border-l-8 border-gray-300 opacity-90">
             <div class="flex-1 space-y-1">
                 <h2 class="text-2xl font-bold text-gray-800">Dinner</h2>
                 <p class="text-lg text-gray-600">Salmon with Asparagus and Brown Rice</p>
                 <p class="text-sm text-gray-500">600 kcal | 45g Protein</p>
             </div>
+            <!-- Add button -->
             <button class="bg-gray-200 text-gray-600 p-3 rounded-full hover:bg-gray-300 transition duration-150">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             </button>

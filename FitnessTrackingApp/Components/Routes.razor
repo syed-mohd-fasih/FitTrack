@@ -1,11 +1,19 @@
-﻿@using FitnessTrackingApp.Components.Account.Shared
+﻿
+@* Short comments added without changing code *@
+
+@using FitnessTrackingApp.Components.Account.Shared  @* For shared account-related components like RedirectToLogin *@
+
 <Router AppAssembly="typeof(Program).Assembly">
+    @* Blazor router to handle page navigation *@
     <Found Context="routeData">
+        @* When a matching route is found *@
         <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+            @* Renders route with authorization check *@
             <NotAuthorized>
-                <RedirectToLogin />
+                @* Rendered if user is not authorized to access the route *@
+                <RedirectToLogin />  @* Redirects unauthorized users to login page *@
             </NotAuthorized>
         </AuthorizeRouteView>
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />  @* Scrolls to h1 element on navigation *@
     </Found>
 </Router>
