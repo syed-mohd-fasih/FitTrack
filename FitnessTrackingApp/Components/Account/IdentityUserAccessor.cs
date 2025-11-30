@@ -1,4 +1,4 @@
-﻿using YourApp.Data;
+﻿using FitnessTrackingApp.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace FitnessTrackingApp.Components.Account

@@ -1,9 +1,11 @@
 using FitnessTrackingApp.Components;
 using FitnessTrackingApp.Components.Account;
+using FitnessTrackingApp.Interfaces;
+using FitnessTrackingApp.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using YourApp.Data;
+using FitnessTrackingApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");;
@@ -14,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Identity
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -35,6 +38,9 @@ builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.Require
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
+
+// Workout
+builder.Services.AddScoped<IWorkoutService, WorkoutService>();
 
 var app = builder.Build();
 

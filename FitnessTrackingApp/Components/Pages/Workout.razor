@@ -1,0 +1,191 @@
+﻿@page "/workouts"
+
+@using FitnessTrackingApp.Models
+@using FitnessTrackingApp.DTOs
+@using FitnessTrackingApp.Interfaces
+
+@inject IWorkoutService WorkoutService
+@inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthStateProvider
+
+@rendermode InteractiveServer
+
+
+<h1 class="text-3xl font-bold mb-6 text-gray-100">My Workouts</h1>
+
+<!-- Add Workout Button -->
+<button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mb-4"
+        @onclick="() => OpenAddModal()">
+    Add Workout
+</button>
+
+<!-- Workouts Table -->
+<table class="min-w-full divide-y divide-gray-700 bg-gray-900 text-gray-100">
+    <thead class="bg-gray-800">
+        <tr>
+            <th class="px-4 py-2">Date</th>
+            <th class="px-4 py-2">Exercise</th>
+            <th class="px-4 py-2">Sets</th>
+            <th class="px-4 py-2">Reps</th>
+            <th class="px-4 py-2">Weight (kg)</th>
+            <th class="px-4 py-2">Actions</th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-700">
+        @foreach (var workout in Workouts)
+        {
+            <tr>
+                <td class="px-4 py-2">@workout.Date.ToShortDateString()</td>
+                <td class="px-4 py-2">@workout.ExerciseName</td>
+                <td class="px-4 py-2">@workout.Sets</td>
+                <td class="px-4 py-2">@workout.Reps</td>
+                <td class="px-4 py-2">@workout.WeightKg</td>
+                <td class="px-4 py-2 space-x-2">
+                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded"
+                            @onclick="() => OpenEditModal(workout)">
+                        Edit
+                    </button>
+                    <button class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
+                            @onclick="() => OpenDeleteModal(workout)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Add/Edit Workout Modal -->
+@if (IsModalOpen)
+{
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-96">
+            <h2 class="text-xl font-bold mb-4">@ModalTitle</h2>
+            <div class="space-y-3">
+                <input class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Exercise Name" @bind="CurrentWorkout.ExerciseName" />
+                <input class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Sets" type="number" @bind="CurrentWorkout.Sets" />
+                <input class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Reps" type="number" @bind="CurrentWorkout.Reps" />
+                <input class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Weight (kg)" type="number" step="0.1" @bind="CurrentWorkout.WeightKg" />
+                <input class="w-full p-2 rounded bg-gray-700 text-gray-100" type="date" @bind="CurrentWorkout.Date" />
+            </div>
+            <div class="mt-4 flex justify-end space-x-2">
+                <button class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded" @onclick="CloseModal">Cancel</button>
+                <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded" @onclick="SaveWorkout">Save</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (IsDeleteModalOpen)
+{
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-80">
+            <h2 class="text-xl font-bold mb-4">Confirm Delete</h2>
+            <p>Are you sure you want to delete <strong>@WorkoutToDelete?.ExerciseName</strong>?</p>
+            <div class="mt-4 flex justify-end space-x-2">
+                <button class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded" @onclick="CloseDeleteModal">Cancel</button>
+                <button class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded" @onclick="ConfirmDeleteWorkout">Delete</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<FitnessTrackingApp.Models.Workout> Workouts = new();
+    private string UserId = string.Empty;
+
+    private bool IsModalOpen = false;
+    private bool IsDeleteModalOpen = false;
+    private string ModalTitle = "Add Workout";
+    private CreateWorkoutDto CurrentWorkout = new();
+    private FitnessTrackingApp.Models.Workout? EditingWorkout = null;
+    private FitnessTrackingApp.Models.Workout? WorkoutToDelete = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            UserId = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value ?? "";
+            await LoadWorkouts();
+        }
+    }
+
+    private async Task LoadWorkouts()
+    {
+        Workouts = await WorkoutService.GetUserWorkoutsAsync(UserId);
+    }
+
+    private void OpenAddModal()
+    {
+        ModalTitle = "Add Workout";
+        CurrentWorkout = new CreateWorkoutDto { Date = DateTime.Today };
+        EditingWorkout = null;
+        IsModalOpen = true;
+    }
+
+    private void OpenEditModal(FitnessTrackingApp.Models.Workout workout)
+    {
+        ModalTitle = "Edit Workout";
+        EditingWorkout = workout;
+        CurrentWorkout = new CreateWorkoutDto
+        {
+            ExerciseName = workout.ExerciseName,
+            Sets = workout.Sets,
+            Reps = workout.Reps,
+            WeightKg = workout.WeightKg,
+            Date = workout.Date
+        };
+        IsModalOpen = true;
+    }
+
+    private void CloseModal()
+    {
+        IsModalOpen = false;
+    }
+
+    private async Task SaveWorkout()
+    {
+        if (EditingWorkout != null)
+        {
+            await WorkoutService.UpdateWorkoutAsync(EditingWorkout.Id, UserId, new UpdateWorkoutDto
+            {
+                ExerciseName = CurrentWorkout.ExerciseName,
+                Sets = CurrentWorkout.Sets,
+                Reps = CurrentWorkout.Reps,
+                WeightKg = CurrentWorkout.WeightKg,
+                Date = CurrentWorkout.Date
+            });
+        }
+        else
+        {
+            await WorkoutService.CreateWorkoutAsync(UserId, CurrentWorkout);
+        }
+
+        IsModalOpen = false;
+        await LoadWorkouts();
+    }
+
+    private void OpenDeleteModal(FitnessTrackingApp.Models.Workout workout)
+    {
+        WorkoutToDelete = workout;
+        IsDeleteModalOpen = true;
+    }
+
+    private void CloseDeleteModal()
+    {
+        IsDeleteModalOpen = false;
+        WorkoutToDelete = null;
+    }
+
+    private async Task ConfirmDeleteWorkout()
+    {
+        if (WorkoutToDelete != null)
+        {
+            await WorkoutService.DeleteWorkoutAsync(WorkoutToDelete.Id, UserId);
+            IsDeleteModalOpen = false;
+            await LoadWorkouts();
+        }
+    }
+}

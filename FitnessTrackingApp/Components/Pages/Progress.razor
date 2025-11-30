@@ -83,6 +83,7 @@
         if (firstRender)
         {
             await JSRuntime.InvokeVoidAsync("renderProgressChart");
+            firstRender = false;
         }
     }
 }

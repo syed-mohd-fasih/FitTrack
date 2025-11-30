@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using YourApp.Data;
+using FitnessTrackingApp.Data;
 
 namespace Microsoft.AspNetCore.Routing
 {
