@@ -1,0 +1,101 @@
+﻿@page "/dashboard"
+@using System
+@using System.Linq
+@using System.Collections.Generic
+@using MudBlazor
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+
+<MudPaper Class="pa-4 mx-auto" Style="max-width:1100px;">
+    <MudText Typo="Typo.h4">Dashboard</MudText>
+    <MudText Typo="Typo.subtitle2" Class="mb-4">Welcome — quick summary of today's activity</MudText>
+
+    <MudGrid>
+        <MudItem xs="12" md="8">
+            <MudGrid>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Class="pa-3">
+                        <MudText Typo="Typo.subtitle2">Workouts Today</MudText>
+                        <MudText Typo="Typo.h5">@workoutsToday</MudText>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Class="pa-3">
+                        <MudText Typo="Typo.subtitle2">Total Duration</MudText>
+                        <MudText Typo="Typo.h5">@totalMinutesToday min</MudText>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Class="pa-3">
+                        <MudText Typo="Typo.subtitle2">Calories Burned</MudText>
+                        <MudText Typo="Typo.h5">@caloriesToday kcal</MudText>
+                    </MudCard>
+                </MudItem>
+            </MudGrid>
+
+            <MudPaper Class="pa-3 mt-4">
+                <MudText Typo="Typo.subtitle1" Class="mb-2">This week's calories</MudText>
+                <MudChart ChartType="ChartType.Line" Labels="@chartLabels" Datasets="@chartSeries" />
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudText Typo="Typo.h6">Quick Actions</MudText>
+            <div class="mt-2" style="display:flex;flex-direction:column;gap:8px;">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddWorkout">Add Workout</MudButton>
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.History" OnClick="NavigateToHistory">View History</MudButton>
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.PhotoLibrary" OnClick="NavigateToProgressPhotos">Progress Photos</MudButton>
+                <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Lightbulb" OnClick="NavigateToRecommendations">Recommendations</MudButton>
+            </div>
+
+            <MudText Typo="Typo.h6" Class="mt-4">Recent Workouts</MudText>
+            <MudTable Items="@recentWorkouts" Dense="true" Hover="true" Class="mt-2">
+                <HeaderContent>
+                    <MudTh>Type</MudTh>
+                    <MudTh>Date</MudTh>
+                    <MudTh>Duration</MudTh>
+                    <MudTh>Calories</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Type">@context.Type</MudTd>
+                    <MudTd DataLabel="Date">@context.Date.ToString("MMM d")</MudTd>
+                    <MudTd DataLabel="Duration">@context.DurationMinutes min</MudTd>
+                    <MudTd DataLabel="Calories">@context.Calories</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    private List<WorkoutEntry> recentWorkouts = new()
+    {
+        new WorkoutEntry { Type = "Running", DurationMinutes = 30, Calories = 300, Notes = "Morning run", Date = DateTime.Now },
+        new WorkoutEntry { Type = "Cycling", DurationMinutes = 45, Calories = 420, Notes = "Stationary bike", Date = DateTime.Now.AddDays(-1) },
+        new WorkoutEntry { Type = "Yoga", DurationMinutes = 25, Calories = 120, Notes = "Stretching", Date = DateTime.Now.AddDays(-2) }
+    };
+
+    private int workoutsToday => recentWorkouts.Count(w => w.Date.Date == DateTime.Now.Date);
+    private int totalMinutesToday => recentWorkouts.Where(w => w.Date.Date == DateTime.Now.Date).Sum(w => w.DurationMinutes);
+    private int caloriesToday => recentWorkouts.Where(w => w.Date.Date == DateTime.Now.Date).Sum(w => w.Calories);
+
+    private string[] chartLabels = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+    private ChartSeries[] chartSeries = new ChartSeries[]
+    {
+        new ChartSeries { Name = "Calories", Data = new double[] { 300, 420, 120, 200, 350, 150, 400 } }
+    };
+
+    void NavigateToAddWorkout() => NavigationManager.NavigateTo("/add-workout");
+    void NavigateToHistory() => NavigationManager.NavigateTo("/workout-history");
+    void NavigateToProgressPhotos() => NavigationManager.NavigateTo("/progress-photos");
+    void NavigateToRecommendations() => NavigationManager.NavigateTo("/recommendations");
+
+    private class WorkoutEntry
+    {
+        public string Type { get; set; } = "";
+        public int DurationMinutes { get; set; }
+        public int Calories { get; set; }
+        public string Notes { get; set; } = "";
+        public DateTime Date { get; set; }
+    }
+}
