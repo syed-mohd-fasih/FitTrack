@@ -4,11 +4,12 @@
 @using FitnessTrackingApp.DTOs
 @using FitnessTrackingApp.Interfaces
 
-@inject IWorkoutService WorkoutService   <!-- Inject workout service -->
-@inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthStateProvider   <!-- Inject auth provider -->
+<!-- Inject workout service and auth provider -->
+@inject IWorkoutService WorkoutService
+@inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthStateProvider
 
-@rendermode InteractiveServer   <!-- Enable interactive Blazor rendering -->
-
+<!-- Enable interactive Blazor rendering -->
+@rendermode InteractiveServer
 
 <h1 class="text-3xl font-bold mb-6 text-black-100">My Workouts</h1>
 
@@ -31,7 +32,8 @@
         </tr>
     </thead>
     <tbody class="divide-y divide-gray-700">
-        @foreach (var workout in Workouts)   <!-- Loop through all workouts -->
+        <!-- Loop through all workouts -->
+        @foreach (var workout in Workouts)
         {
             <tr>
                 <td class="px-4 py-2">@workout.Date.ToShortDateString()</td>
@@ -59,10 +61,11 @@
 <!-- Add/Edit Workout Modal -->
 @if (IsModalOpen)
 {
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"> <!-- Overlay Background -->
-        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-96"> <!-- Modal Box -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <!-- Overlay Background -->
+        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-96">
+            <!-- Modal Box -->
             <h2 class="text-xl font-bold mb-4">@ModalTitle</h2> <!-- Dynamic Title -->
-
             <!-- Input Fields -->
             <div class="space-y-3">
                 <input class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="Exercise Name" @bind="CurrentWorkout.ExerciseName" />
@@ -84,8 +87,10 @@
 <!-- Delete Confirmation Modal -->
 @if (IsDeleteModalOpen)
 {
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"> <!-- Overlay -->
-        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-80"> <!-- Modal Box -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <!-- Overlay -->
+        <div class="bg-gray-800 text-gray-100 rounded-lg p-6 w-80">
+            <!-- Modal Box -->
             <h2 class="text-xl font-bold mb-4">Confirm Delete</h2>
             <p>Are you sure you want to delete <strong>@WorkoutToDelete?.ExerciseName</strong>?</p>
 

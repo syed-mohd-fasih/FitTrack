@@ -77,7 +77,7 @@
     </div>
 </div>
 
-@code {
+@* @code {
     private bool firstRender = true;
 
     // Executes after component rendering
@@ -90,10 +90,10 @@
             firstRender = false;
         }
     }
-}
+} *@
 
 <!-- JavaScript: Chart.js configuration and dummy dataset -->
-<script>
+@* <script>
     window.renderProgressChart = () => {
         const ctx = document.getElementById('progressChart');
 
@@ -153,4 +153,4 @@
             });
         }
     };
-</script>
+</script> *@

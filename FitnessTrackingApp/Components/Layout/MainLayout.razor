@@ -1,6 +1,5 @@
-﻿@* Short comments added without changing any code *@
-
-@inherits LayoutComponentBase  @* Inherits Blazor base layout class to render @Body *@
+﻿@* Inherits Blazor base layout class to render @Body *@
+@inherits LayoutComponentBase
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,29 +13,47 @@
     <style>
         /* Custom styles from your layout file */
         body {
-            font-family: 'Inter', sans-serif;  @* Use Inter font *@
-            background-color: #f7f9fb;          @* Light gray background *@
+            @* Use Inter font *@
+            font-family: 'Inter', sans-serif;
+            @* Light gray background *@
+            background-color: #f7f9fb;
         }
+
         .nav-item {
-            cursor: pointer;                     @* Pointer cursor for nav items *@
-            transition: all 0.2s ease-in-out;   @* Smooth hover transitions *@
+            @* Pointer cursor for nav items *@
+            cursor: pointer;
+            @* Smooth hover transitions *@
+            transition: all 0.2s ease-in-out;
         }
+
         .nav-item.active {
-            background-color: #0d9488;           @* Teal-700 background when active *@
-            color: white;                        @* White text when active *@
-            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.5), 0 2px 4px -2px rgba(13, 148, 136, 0.5); @* Shadow effect *@
+            @* Teal-700 background when active *@
+            background-color: #0d9488;
+            @* White text when active *@
+            color: white;
+            @* Shadow effect *@
+            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.5), 0 2px 4px -2px rgba(13, 148, 136, 0.5);
         }
+
         .stat-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;  @* Smooth hover effect for cards *@
+            @* Smooth hover effect for cards *@
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
+
         .stat-card:hover {
-            transform: translateY(-4px);        @* Slight lift on hover *@
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); @* Card shadow on hover *@
+            @* Slight lift on hover *@
+            transform: translateY(-4px);
+            @* Card shadow on hover *@
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+
         .mock-chart {
-            height: 200px;                        @* Placeholder chart height *@
-            background: linear-gradient(to top, #6ee7b7 0%, #10b981 70%, #059669 100%); @* Green gradient *@
-            border-radius: 0.75rem;              @* Rounded corners for chart *@
+            @* Placeholder chart height *@
+            height: 200px;
+            @* Green gradient *@
+            background: linear-gradient(to top, #6ee7b7 0%, #10b981 70%, #059669 100%);
+            @* Rounded corners for chart *@
+            border-radius: 0.75rem;
         }
     </style>
 </head>
