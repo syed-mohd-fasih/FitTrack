@@ -1,9 +1,4 @@
-﻿Perfect! 😄 I can write a full **ready-to-use README.md** for your Fitness Tracker ICC project **without screenshots**. You can just copy-paste it into VS Code and use it.
-
-Here’s the README:
-
-```markdown
-# FitTrack Pro - Web-Based Fitness Tracker
+﻿# FitTrack Pro - Web-Based Fitness Tracker
 
 ## Project Overview
 **FitTrack Pro** is a modern, responsive web application built using **C# Blazor Server** and **Tailwind CSS**.  
@@ -149,14 +144,3 @@ dotnet run
 ## License
 
 This project is developed for **ICC University Submission** and is intended for educational purposes.
-
-```
-
-This is ready-to-go. ✅  
-
-You can now **copy this README.md**, paste it in VS Code, and submit it with your project **without screenshots**.  
-
-If you want, I can also make a **more “formatted” version with sections for code snippets** like Workout model, DTO, and DbContext, so your instructor can see the structure directly in README.  
-
-Do you want me to do that too?
-```
