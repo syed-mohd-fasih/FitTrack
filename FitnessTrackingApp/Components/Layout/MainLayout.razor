@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@* Short comments added without changing any code *@
+
+@inherits LayoutComponentBase  @* Inherits Blazor base layout class to render @Body *@
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,33 +10,33 @@
     <title>FitTrack Pro - Your Wellness Tracker</title>
     <!-- Load Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
         /* Custom styles from your layout file */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
+            font-family: 'Inter', sans-serif;  @* Use Inter font *@
+            background-color: #f7f9fb;          @* Light gray background *@
         }
         .nav-item {
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
+            cursor: pointer;                     @* Pointer cursor for nav items *@
+            transition: all 0.2s ease-in-out;   @* Smooth hover transitions *@
         }
-        /* Class applied automatically by Blazor's NavLink when the link is active */
         .nav-item.active {
-            background-color: #0d9488; /* Teal-700 */
-            color: white;
-            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.5), 0 2px 4px -2px rgba(13, 148, 136, 0.5);
+            background-color: #0d9488;           @* Teal-700 background when active *@
+            color: white;                        @* White text when active *@
+            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.5), 0 2px 4px -2px rgba(13, 148, 136, 0.5); @* Shadow effect *@
         }
         .stat-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;  @* Smooth hover effect for cards *@
         }
         .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-4px);        @* Slight lift on hover *@
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); @* Card shadow on hover *@
         }
         .mock-chart {
-            height: 200px;
-            background: linear-gradient(to top, #6ee7b7 0%, #10b981 70%, #059669 100%);
-            border-radius: 0.75rem;
+            height: 200px;                        @* Placeholder chart height *@
+            background: linear-gradient(to top, #6ee7b7 0%, #10b981 70%, #059669 100%); @* Green gradient *@
+            border-radius: 0.75rem;              @* Rounded corners for chart *@
         }
     </style>
 </head>
@@ -46,7 +48,7 @@
 
     <!-- 2. Main Content Area (Renders current page content) -->
     <main id="content-container" class="flex-grow p-4 md:p-8 lg:p-10">
-        @Body
+        @Body  @* Render the body content of the current page *@
     </main>
 
 </body>

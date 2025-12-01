@@ -1,48 +1,58 @@
 ﻿@page "/architecture"
 
+<!-- Main container -->
 <div class="space-y-6">
+    <!-- Page Title -->
     <h1 class="text-3xl font-extrabold text-gray-800">Project Architecture Overview</h1>
 
+    <!-- Introduction Card -->
     <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 space-y-4">
         <h2 class="text-xl font-bold text-teal-700">C# .NET Blazor Web App Structure</h2>
         <p class="text-gray-700">
+            <!-- Short explanation of architecture concept -->
             This application employs a classic **Three-Tier Architecture** pattern, ensuring separation of concerns, scalability, and maintainability.
             Blazor allows us to unify the presentation and business logic layers using C#.
         </p>
     </div>
 
-    <!-- Architecture Breakdown -->
+    <!-- Architecture Breakdown Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <!-- Presentation Layer -->
+        <!-- Presentation Layer Card -->
         <div class="bg-white p-6 rounded-3xl shadow-xl border-t-4 border-teal-500 space-y-3">
             <h3 class="text-xl font-bold text-teal-700">1. Presentation Layer (UI)</h3>
             <p class="text-gray-700">
+                <!-- Technologies used -->
                 **Technology:** Razor Components (`.razor`) and Tailwind CSS.
             </p>
             <p class="text-sm text-gray-600">
+                <!-- Description of UI responsibilities -->
                 Handles all client-side interaction, routing, and rendering. Components are organized in `Pages` and `Components/Layout`. The Blazor Server model manages UI state and DOM updates via a SignalR connection.
             </p>
         </div>
 
-        <!-- Business Logic Layer -->
+        <!-- Business Logic Layer Card -->
         <div class="bg-white p-6 rounded-3xl shadow-xl border-t-4 border-indigo-500 space-y-3">
             <h3 class="text-xl font-bold text-indigo-700">2. Business Logic Layer</h3>
             <p class="text-gray-700">
+                <!-- Technologies used in BLL -->
                 **Technology:** C# Services and Models (e.g., `UserService.cs`, `WorkoutModel.cs`).
             </p>
             <p class="text-sm text-gray-600">
+                <!-- Description of business logic functionality -->
                 Contains the core application logic: goal calculation, data validation, and rules for fitness tracking. Services are registered in `Program.cs` and injected into Razor components.
             </p>
         </div>
 
-        <!-- Data Access Layer -->
+        <!-- Data Access Layer Card -->
         <div class="bg-white p-6 rounded-3xl shadow-xl border-t-4 border-yellow-500 space-y-3">
             <h3 class="text-xl font-bold text-yellow-700">3. Data Access Layer (DAL)</h3>
             <p class="text-gray-700">
+                <!-- Technologies used in DAL -->
                 **Technology:** Entity Framework Core (Mock/Planned) connecting to Azure SQL.
             </p>
             <p class="text-sm text-gray-600">
+                <!-- Description of data operations -->
                 Responsible for connecting to the database, performing CRUD operations, and managing data persistence. This layer keeps the Business Logic layer unaware of the underlying database technology.
             </p>
         </div>
