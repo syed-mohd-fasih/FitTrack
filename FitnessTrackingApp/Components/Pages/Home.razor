@@ -4,7 +4,7 @@
 <div class="space-y-8 p-4">
 
     <!-- Header section with gradient welcome banner -->
-    <div class="bg-gradient-to-r from-cyan-500 to-sky-600 text-white p-6 md:p-8 rounded-3xl shadow-xl">
+    <div class="bg-[linear-gradient(to_right,#06b6d4,#0284c7)] text-white p-6 md:p-8 rounded-3xl shadow-xl">
         <h1 class="text-4xl font-black mb-1">Welcome Back, Fitness Fanatic!</h1>
         <p class="text-lg font-light opacity-90">Your motivation is key. Let's crush those goals today.</p>
 
@@ -36,7 +36,11 @@
         </div>
 
         <!-- Calories metric card with gradient background -->
-        <div class="p-6 rounded-3xl shadow-2xl transition duration-300 transform hover:scale-[1.02] cursor-pointer bg-gradient-to-br from-lime-500 to-green-600 text-gray-900 hover:from-lime-600 hover:to-green-700">
+        <div class="p-6 rounded-3xl shadow-2xl transition duration-300 transform hover:scale-[1.02] cursor-pointer
+                    bg-[linear-gradient(to_bottom_right,#84cc16,#16a34a)]
+                    hover:bg-[linear-gradient(to_bottom_right,#65a30d,#15803d)]
+                    text-gray-900">
+
             <div class="flex items-center justify-between mb-4">
                 <p class="text-sm font-semibold opacity-90">Calories Burned</p>
                 <span class="text-white text-2xl">🔥</span>
@@ -57,10 +61,12 @@
             <!-- Active minutes breakdown -->
             <p class="text-5xl font-extrabold text-gray-900">90</p>
             <p class="text-sm text-gray-600 mt-2">Breakdown:</p>
+
             <div class="h-2 flex rounded-full mt-1 overflow-hidden">
                 <div class="bg-cyan-500 h-full" style="width: 50%;"></div>
                 <div class="bg-sky-500 h-full" style="width: 50%;"></div>
             </div>
+
             <div class="text-xs text-gray-500 flex justify-between mt-1">
                 <span>Moderate (45m)</span>
                 <span>Vigorous (45m)</span>
@@ -74,7 +80,6 @@
                 <span class="text-indigo-500 text-2xl">💤</span>
             </div>
 
-            <!-- Sleep score details -->
             <p class="text-5xl font-extrabold text-gray-900">82</p>
             <p class="text-sm text-indigo-600 mt-4 font-medium">7h 45m deep sleep recorded.</p>
         </div>
@@ -86,15 +91,12 @@
         <!-- Record activity call-to-action -->
         <div class="lg:col-span-2 bg-cyan-50 p-6 rounded-3xl shadow-lg border border-cyan-100 flex flex-col justify-between items-start">
             <h2 class="text-2xl font-bold text-cyan-800 flex items-center">
-                <!-- Icon for activity logging -->
                 <svg class="w-7 h-7 mr-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 Record Activity
             </h2>
 
-            <!-- Activity description text -->
             <p class="text-cyan-700 mt-2 mb-4">Quickly log your latest run, gym session, or yoga class to keep your progress accurate.</p>
 
-            <!-- Log workout button -->
             <button class="w-auto px-6 py-3 bg-cyan-600 text-white font-extrabold rounded-full shadow-lg hover:bg-cyan-700 transition duration-150 transform hover:scale-[1.03]">
                 Log Workout Now
             </button>
