@@ -1,7 +1,9 @@
 ﻿@page "/mealplan"
+
 @using FitnessTrackingApp.Models
 @using FitnessTrackingApp.DTOs
 @using FitnessTrackingApp.Interfaces
+
 @inject IMealService MealService
 @inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthStateProvider
 
@@ -12,70 +14,108 @@
 <div class="flex space-x-2 overflow-x-auto pb-2 border-b border-gray-700 mb-6">
     @foreach (var day in DaysOfWeek)
     {
-        <button class="@GetDayButtonClasses(day)" @onclick="() => SelectDay(day)">@day: @DayToDate[day].ToString("dd MMM")</button>
+        <button class="@GetDayButtonClasses(day)" @onclick="() => SelectDay(day)">
+            @day: @DayToDate[day].ToString("dd MMM")
+        </button>
     }
 </div>
 
-<button class="px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg hover:bg-green-700 transition duration-150 ease-in-out"
+<button class="px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg hover:bg-green-700 transition duration-150 ease-in-out mb-6"
         @onclick="OpenAddModal">
     + Add Meal
 </button>
 
 <div class="space-y-6">
-    @foreach (var meal in MealsForSelectedDay)
+    @if (MealsForSelectedDay.Any())
     {
-        <div class="p-6 rounded-3xl shadow-xl flex items-center justify-between border-l-8 @GetMealBorder(meal)">
-            <div class="flex-1 space-y-1">
-                <h2 class="text-2xl font-bold">@meal.Name</h2>
-                <p class="text-lg">@meal.Description</p>
-                <p class="text-sm text-gray-400">@meal.Calories kcal | @meal.ProteinGrams g Protein</p>
+        @foreach (var meal in MealsForSelectedDay)
+        {
+            <div class="p-6 rounded-3xl shadow-xl flex items-center justify-between border-l-8 @GetMealBorder(meal) bg-gray-900 text-gray-100">
+                <div class="flex-1 space-y-1">
+                    <h2 class="text-2xl font-bold flex items-center gap-2">
+                        @meal.Name
+                        @if (meal.Consumed)
+                        {
+                            <span class="text-xs bg-green-900 text-green-300 px-2 py-1 rounded-full border border-green-700">Consumed</span>
+                        }
+                    </h2>
+                    <p class="text-lg text-gray-300">@meal.Description</p>
+                    <p class="text-sm text-gray-400 font-mono">
+                        <span class="text-green-400 font-bold">@meal.Calories</span> kcal
+                        | <span class="text-blue-400 font-bold">@meal.ProteinGrams g</span> Protein
+                    </p>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button class="@GetConsumedButtonClass(meal) transition transform hover:scale-105"
+                            @onclick="() => ToggleConsumed(meal)"
+                            title="Mark as Eaten">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </button>
+
+                    <button class="px-4 bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-full transition shadow-lg"
+                            @onclick="() => OpenEditModal(meal)">
+                        ✎
+                    </button>
+
+                    <button class="px-4 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full transition shadow-lg"
+                            @onclick="() => OpenDeleteModal(meal)">
+                        🗑
+                    </button>
+                </div>
             </div>
-            <div class="flex space-x-2">
-                <button class="@GetConsumedButtonClass(meal)" @onclick="() => ToggleConsumed(meal)">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </button>
-                <button class="px-4 bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-full" @onclick="() => OpenEditModal(meal)">
-                    ✎
-                </button>
-                <button class="px-4 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full" @onclick="() => OpenDeleteModal(meal)">
-                    🗑
-                </button>
-            </div>
+        }
+    }
+    else
+    {
+        <div class="text-center py-10 text-gray-500">
+            <p class="text-xl">No meals planned for @SelectedDay.</p>
+            <p class="text-sm">Plan your nutrition to stay on track!</p>
         </div>
     }
 </div>
 
-<!-- Add/Edit Modal -->
 @if (IsModalOpen)
 {
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-gray-900 text-gray-100 rounded-lg p-6 w-96">
+        <div class="bg-gray-900 text-gray-100 rounded-lg p-6 w-96 shadow-2xl">
             <h2 class="text-xl font-bold mb-4">@ModalTitle</h2>
+
             <div class="space-y-3">
-                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" placeholder="Meal Name" @bind="CurrentMeal.Name" />
-                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" placeholder="Description" @bind="CurrentMeal.Description" />
-                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" placeholder="Calories" type="number" @bind="CurrentMeal.Calories" />
-                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" placeholder="Protein (g)" type="number" @bind="CurrentMeal.ProteinGrams" />
-                <input class="w-full p-2 rounded bg-gray-800 text-gray-100" type="date" @bind="CurrentMeal.Date" />
+                <input class="w-full p-3 rounded-lg bg-gray-800 text-gray-100 border border-gray-700 focus:border-green-500 outline-none"
+                       placeholder="Meal Name (e.g. Breakfast)" @bind="CurrentMeal.Name" />
+
+                <input class="w-full p-3 rounded-lg bg-gray-800 text-gray-100 border border-gray-700 focus:border-green-500 outline-none"
+                       placeholder="Description (e.g. Oats & Whey)" @bind="CurrentMeal.Description" />
+
+                <div class="flex space-x-2">
+                    <input class="w-1/2 p-3 rounded-lg bg-gray-800 text-gray-100 border border-gray-700 focus:border-green-500 outline-none"
+                           placeholder="Calories" type="number" @bind="CurrentMeal.Calories" />
+                    <input class="w-1/2 p-3 rounded-lg bg-gray-800 text-gray-100 border border-gray-700 focus:border-green-500 outline-none"
+                           placeholder="Protein (g)" type="number" @bind="CurrentMeal.ProteinGrams" />
+                </div>
+
+                <input class="w-full p-3 rounded-lg bg-gray-800 text-gray-100 border border-gray-700 focus:border-green-500 outline-none"
+                       type="date" @bind="CurrentMeal.Date" />
             </div>
-            <div class="mt-4 flex justify-end space-x-2">
-                <button class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded" @onclick="CloseModal">Cancel</button>
-                <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded" @onclick="SaveMeal">Save</button>
+
+            <div class="mt-6 flex justify-end space-x-2">
+                <button class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg transition" @onclick="CloseModal">Cancel</button>
+                <button class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition" @onclick="SaveMeal">Save</button>
             </div>
         </div>
     </div>
 }
 
-<!-- Delete Modal -->
 @if (IsDeleteModalOpen)
 {
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-gray-900 text-gray-100 rounded-lg p-6 w-80">
+        <div class="bg-gray-900 text-gray-100 rounded-lg p-6 w-80 shadow-2xl">
             <h2 class="text-xl font-bold mb-4">Confirm Delete</h2>
-            <p>Delete <strong>@MealToDelete?.Name</strong>?</p>
-            <div class="mt-4 flex justify-end space-x-2">
-                <button class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded" @onclick="CloseDeleteModal">Cancel</button>
-                <button class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded" @onclick="ConfirmDeleteMeal">Delete</button>
+            <p class="text-gray-300 mb-6">Delete <strong>@MealToDelete?.Name</strong>?</p>
+            <div class="flex justify-end space-x-2">
+                <button class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg transition" @onclick="CloseDeleteModal">Cancel</button>
+                <button class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition" @onclick="ConfirmDeleteMeal">Delete</button>
             </div>
         </div>
     </div>
@@ -104,15 +144,20 @@
             UserId = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value ?? "";
         }
 
-        // Map days to current week
+        // Initialize Week Dates (Handling Sunday Start correctly)
         var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1);
+        if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday) startOfWeek = DateTime.Today.AddDays(-6);
+
         foreach (var day in DaysOfWeek.Select((d, i) => new { d, i }))
         {
             DayToDate[day.d] = startOfWeek.AddDays(day.i);
         }
 
+        // Auto-select today
+        var todayStr = DateTime.Now.DayOfWeek.ToString().Substring(0, 3);
+        if (DaysOfWeek.Contains(todayStr)) SelectedDay = todayStr;
+
         await LoadMeals();
-        SelectDay("Mon");
     }
 
     private async Task LoadMeals()
@@ -128,22 +173,23 @@
 
     private string GetDayButtonClasses(string day) =>
         day == SelectedDay
-            ? "px-4 py-2 text-sm font-semibold rounded-full bg-cyan-500 text-white shadow-lg"
-            : "px-4 py-2 text-sm font-medium rounded-full bg-gray-700 text-gray-100 hover:bg-gray-600";
+            ? "px-4 py-2 text-sm font-semibold rounded-full bg-green-500 text-white shadow-lg transform scale-105 transition"
+            : "px-4 py-2 text-sm font-medium rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition";
 
     private string GetMealBorder(Meal meal) =>
-        meal.Name switch
+        meal.Name.Trim().ToLower() switch
         {
-            "Breakfast" => "border-lime-500",
-            "Lunch" => "border-cyan-500",
-            "Dinner" => "border-gray-400",
-            _ => "border-gray-300"
+            "breakfast" => "border-yellow-500", // Morning Sun
+            "lunch" => "border-cyan-500",       // Mid-day
+            "dinner" => "border-purple-500",    // Evening
+            "snack" => "border-pink-500",       // Treat
+            _ => "border-gray-500"
         };
 
     private string GetConsumedButtonClass(Meal meal) =>
         meal.Consumed
-            ? "bg-lime-100 text-lime-700 p-3 rounded-full hover:bg-lime-200"
-            : "bg-gray-700 text-gray-100 p-3 rounded-full hover:bg-gray-600";
+            ? "bg-green-100 text-green-700 p-3 rounded-full hover:bg-green-200 shadow-md"
+            : "bg-gray-700 text-gray-400 p-3 rounded-full hover:bg-gray-600 shadow-md";
 
     private void OpenAddModal()
     {
