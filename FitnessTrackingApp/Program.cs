@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FitnessTrackingApp.Data;
+using Microsoft.Azure.Cosmos;
 
 // Create builder for the web application
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,16 @@ builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.Require
 
 // Email sender (placeholder service - does nothing)
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
+
+builder.Services.AddSingleton<CosmosClient>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    return new CosmosClient(
+        config["CosmosDb:AccountEndpoint"],
+        config["CosmosDb:AccountKey"]
+    );
+});
+
 
 // Workout service registration
 builder.Services.AddScoped<IWorkoutService, WorkoutService>();

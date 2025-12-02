@@ -1,33 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
+﻿namespace FitnessTrackingApp.Models;
 
-namespace FitnessTrackingApp.Models;
+using Newtonsoft.Json;
 
-// Workout entity representing a user's exercise session
 public class Workout
 {
-    [Key] // Primary key
-    public int Id { get; set; }
+    [JsonProperty("id")]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
-    [Required] // Name of the exercise (e.g., Bench Press)
-    public string ExerciseName { get; set; } = string.Empty;
+    [JsonProperty("userId")]
+    public string UserId { get; set; }
 
-    [Required] // Number of sets performed
+    [JsonProperty("exerciseName")]
+    public string ExerciseName { get; set; }
+
+    [JsonProperty("sets")]
     public int Sets { get; set; }
 
-    [Required] // Number of repetitions per set
+    [JsonProperty("reps")]
     public int Reps { get; set; }
 
-    // Weight used for the exercise in kilograms
-    public double WeightKg { get; set; }
+    [JsonProperty("weightKg")]
+    public float WeightKg { get; set; }
 
-    [Required] // Date of the workout session
-    public DateTime Date { get; set; } = DateTime.UtcNow;
-
-    [Required] // Associated user's ID
-    public string UserId { get; set; } = string.Empty;
-
-    [ForeignKey(nameof(UserId))] // Link to the IdentityUser entity
-    public IdentityUser? User { get; set; }
+    [JsonProperty("date")]
+    public DateTime Date { get; set; }
 }

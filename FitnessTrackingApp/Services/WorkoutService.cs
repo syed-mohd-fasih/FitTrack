@@ -1,61 +1,71 @@
 ﻿using FitnessTrackingApp.Interfaces;
 using FitnessTrackingApp.DTOs;
 using FitnessTrackingApp.Models;
-using Microsoft.EntityFrameworkCore;
-using FitnessTrackingApp.Data;
+using Microsoft.Azure.Cosmos;
 
 namespace FitnessTrackingApp.Services;
 
-// Workout service implementation
 public class WorkoutService : IWorkoutService
 {
-    private readonly ApplicationDbContext _db; // Database context
+    private readonly Container _container;
 
-    public WorkoutService(ApplicationDbContext db)
+    public WorkoutService(CosmosClient client, IConfiguration config)
     {
-        _db = db; // Inject DB context
+        _container = client
+            .GetDatabase(config["CosmosDb:DatabaseName"])
+            .GetContainer("Workouts");
     }
 
-    // Get all workouts for a specific user
     public async Task<List<Workout>> GetUserWorkoutsAsync(string userId)
     {
-        return await _db.Workouts
-            .Where(w => w.UserId == userId) // Filter by user
-            .OrderByDescending(w => w.Date) // Latest first
-            .ToListAsync();
+        var query = new QueryDefinition(
+            "SELECT * FROM c WHERE c.userId = @uid ORDER BY c.date DESC"
+        ).WithParameter("@uid", userId);
+
+        var iterator = _container.GetItemQueryIterator<Workout>(query);
+        var results = new List<Workout>();
+
+        while (iterator.HasMoreResults)
+            results.AddRange(await iterator.ReadNextAsync());
+
+        return results;
     }
 
-    // Get a single workout by ID for a specific user
     public async Task<Workout?> GetWorkoutByIdAsync(int id, string userId)
     {
-        return await _db.Workouts.FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
+        var idStr = id.ToString();
+
+        try
+        {
+            var response = await _container.ReadItemAsync<Workout>(idStr, new PartitionKey(userId));
+            return response.Resource;
+        }
+        catch (CosmosException e) when (e.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
     }
 
-    // Create a new workout
     public async Task<Workout> CreateWorkoutAsync(string userId, CreateWorkoutDto dto)
     {
         var workout = new Workout
         {
+            UserId = userId,
             ExerciseName = dto.ExerciseName,
             Sets = dto.Sets,
             Reps = dto.Reps,
             WeightKg = dto.WeightKg,
-            Date = dto.Date,
-            UserId = userId // Assign owner
+            Date = dto.Date
         };
 
-        _db.Workouts.Add(workout); // Add to DB
-        await _db.SaveChangesAsync(); // Save changes
+        await _container.CreateItemAsync(workout, new PartitionKey(userId));
         return workout;
     }
 
-    // Update an existing workout
     public async Task<Workout?> UpdateWorkoutAsync(int id, string userId, UpdateWorkoutDto dto)
     {
-        var workout = await GetWorkoutByIdAsync(id, userId); // Fetch workout
-
-        if (workout == null)
-            return null; // Not found
+        var workout = await GetWorkoutByIdAsync(id, userId);
+        if (workout == null) return null;
 
         workout.ExerciseName = dto.ExerciseName;
         workout.Sets = dto.Sets;
@@ -63,20 +73,16 @@ public class WorkoutService : IWorkoutService
         workout.WeightKg = dto.WeightKg;
         workout.Date = dto.Date;
 
-        await _db.SaveChangesAsync(); // Save updates
+        await _container.ReplaceItemAsync(workout, workout.Id, new PartitionKey(userId));
         return workout;
     }
 
-    // Delete a workout
     public async Task<bool> DeleteWorkoutAsync(int id, string userId)
     {
-        var workout = await GetWorkoutByIdAsync(id, userId); // Fetch workout
+        var workout = await GetWorkoutByIdAsync(id, userId);
+        if (workout == null) return false;
 
-        if (workout == null)
-            return false; // Not found
-
-        _db.Workouts.Remove(workout); // Remove from DB
-        await _db.SaveChangesAsync(); // Save deletion
+        await _container.DeleteItemAsync<Workout>(workout.Id, new PartitionKey(userId));
         return true;
     }
 }

@@ -13,7 +13,7 @@ public class CreateWorkoutDto
     public int Reps { get; set; }
 
     // Weight used in kilograms
-    public double WeightKg { get; set; }
+    public float WeightKg { get; set; }
 
     // Date of the workout
     public DateTime Date { get; set; }

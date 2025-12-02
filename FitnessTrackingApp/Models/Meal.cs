@@ -1,32 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
+﻿namespace FitnessTrackingApp.Models;
 
-namespace FitnessTrackingApp.Models;
+using Newtonsoft.Json;
 
 public class Meal
 {
-    [Key]
-    public int Id { get; set; }
+    [JsonProperty("id")]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
-    [Required]
-    public string Name { get; set; } = string.Empty; // e.g., Breakfast, Lunch, Dinner
+    [JsonProperty("userId")]
+    public string UserId { get; set; }
 
-    [Required]
-    public string Description { get; set; } = string.Empty; // Meal description
+    [JsonProperty("name")]
+    public string Name { get; set; }
 
+    [JsonProperty("description")]
+    public string? Description { get; set; }
+
+    [JsonProperty("calories")]
     public int Calories { get; set; }
 
+    [JsonProperty("proteinGrams")]
     public int ProteinGrams { get; set; }
 
-    [Required]
-    public DateTime Date { get; set; } = DateTime.UtcNow.Date;
+    [JsonProperty("date")]
+    public DateTime Date { get; set; }
 
-    [Required]
-    public string UserId { get; set; } = string.Empty;
-
-    [ForeignKey(nameof(UserId))]
-    public IdentityUser? User { get; set; }
-
-    public bool Consumed { get; set; } = false;
+    [JsonProperty("consumed")]
+    public bool Consumed { get; set; }
 }
